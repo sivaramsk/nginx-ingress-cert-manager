@@ -1,0 +1,20 @@
+apiVersion: skaffold/v2beta6
+kind: Config
+metadata:
+  name: cert-manager-letsencrypt
+build:
+  artifacts:
+  - image: sivaramsk/nginx
+    context: ./images/nginx
+    docker:
+      dockerfile: Dockerfile
+
+deploy:
+  kubectl:
+    manifests:
+    - https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.34.1/deploy/static/provider/cloud/deploy.yaml
+    - https://github.com/jetstack/cert-manager/releases/download/v0.16.1/cert-manager.yaml
+    - templates/nginx.yaml
+    - templates/nginx_ingress.yaml
+    - templates/issuer_staging.yaml
+    - templates/issuer_prod.yaml
